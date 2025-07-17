@@ -42,7 +42,7 @@ public partial class LevelUpSystem : SystemBase
 ```
 
 ## Archetype
-It is a prototype entity with all its components.
+It is a prototype Entity with all its components.
 ```
 EntityArchetype entityArchetype = entityManager.CreateArchetype(
     typeof(LevelComponent),

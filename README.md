@@ -3,7 +3,7 @@
 ## Links
 [Documentation](https://docs.unity3d.com/Packages/com.unity.entities@1.3/manual/index.html)
 
-[Tutorial](https://www.youtube.com/watch?v=gqJlQJn0N2g)
+[Webinar](https://www.youtube.com/watch?v=gqJlQJn0N2g)
 
 ## Entity
 It's similar to a GameObject with components, but ECS compatible.

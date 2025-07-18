@@ -50,3 +50,9 @@ EntityArchetype entityArchetype = entityManager.CreateArchetype(
     );
 Entity entity = entityManager.CreateEntity(entityArchetype);
 ```
+
+## Limitations
+- No audio support
+- No animation support
+- No UI support
+- No AI navigation support

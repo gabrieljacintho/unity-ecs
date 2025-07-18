@@ -21,37 +21,66 @@ Entity entity = entityManager.CreateEntity();
 ## Component
 Responsible for storing data.
 ```
-public struct LevelComponent : IComponentData
+public struct Speed : IComponentData
 {
-    public float Level;
+    public float Value;
 }
 ```
 ```
-Entity entity = entityManager.CreateEntity(typeof(LevelComponent));
-entityManager.SetComponentData(entity, new LevelComponent { Level = 10 });
+Entity entity = entityManager.CreateEntity(typeof(Speed));
+entityManager.SetComponentData(entity, new Speed { Value = 10 });
 ```
 
 ## System
 Responsible for the behavior of components.
 ```
-public partial class LevelUpSystem : SystemBase
+/* 
+ * SimulationSystemGroup == Update (default)
+ * FixedStepSimulationSystemGroup == FixedUpdate
+ * PresentationSystemGroup == LateUpdate
+*/
+[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+public partial struct MoveSystem : ISystem
 {
-    protected override void OnUpdate()
+    public void OnUpdate(ref SystemState state)
     {
-        Entities.ForEach((ref LevelComponent levelComponent) =>
+        // RefRO = Read-Only Reference, RefRW = Read-Write Reference
+        foreach (var (speed, transform) in SystemAPI.Query<RefRO<Speed>, RefRW<LocalTransform>>().WithNone<ConflictState>())
         {
-            levelComponent.Level += 1f * SystemAPI.Time.DeltaTime;
-            UnityEngine.Debug.Log($"Current Level: {levelComponent.Level}");
-        }).Schedule();
+            transform.ValueRW.Position.x += speed.ValueRO.Value * SystemAPI.Time.DeltaTime;
+        }
     }
 }
 ```
 
+## Baker
+Allows us to convert GameObjects into Entities.
+```
+public class BugBaker : Baker<BugAuthoring>
+{
+    public override void Bake(BugAuthoring authoring)
+    {
+        Entity entity = GetEntity(TransformUsageFlags.Dynamic);
+        AddComponent(entity, new Speed
+        {
+            Value = authoring.speed
+        });
+    }
+}
+```
+```
+public class BugAuthoring : MonoBehaviour
+{
+    public int speed;
+    public GameObject projectilePrefab;
+}
+```
+
 ## Archetype
-It is a prototype Entity with all its components.
+It is a Entity prototype with all its components.
 ```
 EntityArchetype entityArchetype = entityManager.CreateArchetype(
-    typeof(LevelComponent),
+    typeof(Speed),
     typeof(LocalTransform)
     );
 Entity entity = entityManager.CreateEntity(entityArchetype);

@@ -5,6 +5,12 @@
 
 [Webinar](https://www.youtube.com/watch?v=gqJlQJn0N2g)
 
+## Limitations
+- No audio support
+- No animation support
+- No UI support
+- No AI navigation support
+
 ## Entity
 It's similar to a GameObject with components, but ECS compatible.
 ```
@@ -50,9 +56,3 @@ EntityArchetype entityArchetype = entityManager.CreateArchetype(
     );
 Entity entity = entityManager.CreateEntity(entityArchetype);
 ```
-
-## Limitations
-- No audio support
-- No animation support
-- No UI support
-- No AI navigation support
